@@ -29,12 +29,6 @@ int main() {
             continue;
         }
         cout << "\"" << q << "\"  found " << I.size() << " time(s):\n";
-        for (LL rank = I.left; rank <= I.right; rank++) {
-            auto [doc, pos] = fmi.locate(rank);
-            if (doc >= 0)
-                cout << "  seq[" << doc << "] pos " << pos
-                     << "  -> \"" << sequences[doc].substr(pos, q.size()) << "\"\n";
-        }
     }
 
     return 0;
