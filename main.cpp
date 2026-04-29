@@ -19,16 +19,19 @@ int main() {
     cout << "Indexed " << sequences.size() << " sequences, "
          << "total BWT length: " << fmi.size() << "\n\n";
 
-    // Search for a few patterns and report all occurrences
     vector<string> queries = {"ACGT", "GATTA", "TTTT", "ZZZZ"};
 
     for (const string& q : queries) {
-        FM_index::Interval I = fmi.search(q);
-        if (I == fmi.get_empty_interval()) {
-            cout << "\"" << q << "\"  not found\n";
-            continue;
+        cout << "Suffixes of \"" << q << "\":\n";
+
+        FM_index::Interval I = fmi.get_full_interval();
+        for (int64_t i = (int64_t)q.size() - 1; i >= 0; i--) {
+            I = fmi.left_extend(I, q[i]);
+            int64_t count = (I == fmi.get_empty_interval()) ? 0 : I.size();
+            cout << "  \"" << q.substr(i) << "\": " << count << "\n";
+            if (I == fmi.get_empty_interval()) break;
         }
-        cout << "\"" << q << "\"  found " << I.size() << " time(s):\n";
+        cout << "\n";
     }
 
     return 0;

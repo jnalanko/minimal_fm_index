@@ -7,8 +7,6 @@
 #include "sdsl/wavelet_trees.hpp"
 #include "divsufsort.h"
 
-typedef int64_t LL;
-
 using namespace std;
 
 // FM index for multiple input strings
@@ -19,8 +17,8 @@ class FM_index{
 public:
 
     struct Interval{
-        LL left, right; // Inclusive endpoint
-        LL size(){return right-left+1;}
+        int64_t left, right; // Inclusive endpoint
+        int64_t size(){return right-left+1;}
         friend bool operator==(const Interval& A, const Interval& B);
         //friend std::ostream& operator<<(std::ostream& os, const Interval& I);
     };
@@ -30,7 +28,7 @@ private:
     sdsl::wt_hutu<sdsl::bit_vector> bwt;
     vector<int64_t> C_array;
     Interval EMPTY_INTERVAL = {-1,0}; // Has length 0 by the formula end - start + 1
-    Interval FULL_INTERVAL = {-1,0}; // Set after construction
+    Interval FUint64_t_INTERVAL = {-1,0}; // Set after construction
 
     string concatenate(const vector<string>& inputs) const{
         string X;
@@ -44,12 +42,12 @@ private:
 
 public:
 
-    Interval get_full_interval() const {return FULL_INTERVAL;};
+    Interval get_full_interval() const {return FUint64_t_INTERVAL;};
     Interval get_empty_interval() const {return EMPTY_INTERVAL;};
-    LL C_array_at(char c) const {return C_array[c];}
-    char bwt_at(LL i) const {return bwt[i];}
-    LL bwt_rank(LL i, char c) const {return bwt.rank(i, c);}
-    LL size() const {return bwt.size();}
+    int64_t C_array_at(char c) const {return C_array[c];}
+    char bwt_at(int64_t i) const {return bwt[i];}
+    int64_t bwt_rank(int64_t i, char c) const {return bwt.rank(i, c);}
+    int64_t size() const {return bwt.size();}
 
     FM_index(){}
 
@@ -73,10 +71,10 @@ public:
     }
 
     // Returns bytes written
-    LL serialize(ostream& os){
-        LL written = 0;
+    int64_t serialize(ostream& os){
+        int64_t written = 0;
 
-        LL C_array_size_bytes = C_array.size() * sizeof(int64_t);
+        int64_t C_array_size_bytes = C_array.size() * sizeof(int64_t);
 
         os.write((char*)&C_array_size_bytes, sizeof(C_array_size_bytes));
         os.write((char*)C_array.data(), C_array_size_bytes);
@@ -87,7 +85,7 @@ public:
     }
 
     void load(istream& is){
-        LL C_array_size_bytes;
+        int64_t C_array_size_bytes;
 
         // Read C array
         is.read((char*)&C_array_size_bytes, sizeof(C_array_size_bytes));
@@ -98,7 +96,7 @@ public:
         bwt.load(is);
 
         // Set full interval
-        FULL_INTERVAL = {(LL)0, (LL)bwt.size()-1};
+        FUint64_t_INTERVAL = {(int64_t)0, (int64_t)bwt.size()-1};
     }
 
     void construct(const vector<string>& inputs){
@@ -121,7 +119,7 @@ public:
         for(char c : BWT_string) char_counts[c]++;
         C_array = char_counts_to_C_array(char_counts);
 
-        FULL_INTERVAL = {(LL)0, (LL)bwt.size()-1};
+        FUint64_t_INTERVAL = {(int64_t)0, (int64_t)bwt.size()-1};
     }
 
     // Left extend the input interval with c
@@ -135,8 +133,8 @@ public:
     }
 
     Interval search(const string& x) const{
-        Interval I = FULL_INTERVAL;
-        for(LL i = (LL)x.size()-1; i >= 0; i--){
+        Interval I = FUint64_t_INTERVAL;
+        for(int64_t i = (int64_t)x.size()-1; i >= 0; i--){
             I = left_extend(I, x[i]);
             if(I == EMPTY_INTERVAL) return EMPTY_INTERVAL;
         }
