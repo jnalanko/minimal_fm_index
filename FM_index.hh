@@ -27,8 +27,8 @@ private:
 
     sdsl::wt_hutu<sdsl::bit_vector> bwt;
     vector<int64_t> C_array;
-    Interval EMPTY_INTERVAL = {-1,0}; // Has length 0 by the formula end - start + 1
-    Interval FUint64_t_INTERVAL = {-1,0}; // Set after construction
+    Interval EMPTY_INTERVAL = {1,0}; // Has length 0 by the formula end - start + 1
+    Interval FULL_INTERVAL = {1,0}; // Set after construction
 
     string concatenate(const vector<string>& inputs) const{
         string X;
@@ -42,7 +42,7 @@ private:
 
 public:
 
-    Interval get_full_interval() const {return FUint64_t_INTERVAL;};
+    Interval get_full_interval() const {return FULL_INTERVAL;};
     Interval get_empty_interval() const {return EMPTY_INTERVAL;};
     int64_t C_array_at(char c) const {return C_array[c];}
     char bwt_at(int64_t i) const {return bwt[i];}
@@ -96,7 +96,7 @@ public:
         bwt.load(is);
 
         // Set full interval
-        FUint64_t_INTERVAL = {(int64_t)0, (int64_t)bwt.size()-1};
+        FULL_INTERVAL = {(int64_t)0, (int64_t)bwt.size()-1};
     }
 
     void construct(const vector<string>& inputs){
@@ -119,7 +119,7 @@ public:
         for(char c : BWT_string) char_counts[c]++;
         C_array = char_counts_to_C_array(char_counts);
 
-        FUint64_t_INTERVAL = {(int64_t)0, (int64_t)bwt.size()-1};
+        FULL_INTERVAL = {(int64_t)0, (int64_t)bwt.size()-1};
     }
 
     // Left extend the input interval with c
@@ -133,7 +133,7 @@ public:
     }
 
     Interval search(const string& x) const{
-        Interval I = FUint64_t_INTERVAL;
+        Interval I = FULL_INTERVAL;
         for(int64_t i = (int64_t)x.size()-1; i >= 0; i--){
             I = left_extend(I, x[i]);
             if(I == EMPTY_INTERVAL) return EMPTY_INTERVAL;
