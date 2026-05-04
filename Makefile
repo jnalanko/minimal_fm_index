@@ -1,4 +1,4 @@
-SDSL_ROOT := ../sdsl-lite/build
+SDSL_ROOT := sdsl-lite/build
 INCLUDEPATHS := -I$(SDSL_ROOT)/include -I$(SDSL_ROOT)/external/libdivsufsort/include
 LIBPATHS    := -L$(SDSL_ROOT)/lib -L$(SDSL_ROOT)/external/libdivsufsort/lib
 LIBS        := -lsdsl -ldivsufsort -ldivsufsort64
